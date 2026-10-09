@@ -1,0 +1,41 @@
+# Editor and local tooling
+/.idea/
+/.vscode/
+
+# Local project documents (keep /LIN_NOTE.md tracked)
+/IMPLEMENTATION_STATUS.md
+/产品需求文档-PRD-自动生长式个人知识体系工具.md
+/需求分析文档-自动生长式个人知识体系工具.md
+/系统架构设计文档-自动生长式个人知识体系工具.md
+/项目学习与完善路线建议.md
+/后续方向.md
+
+# Local environment files (keep examples)
+**/.env
+**/.env.local
+**/.env.*.local
+!**/.env.example
+
+# Python caches and virtual environments
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+/backend/.venv/
+/backend/.venv-*/
+
+# Frontend dependencies and build output
+/frontend/node_modules/
+/frontend/.next/
+/frontend/out/
+/frontend/*.tsbuildinfo
+/frontend/npm-debug.log*
+
+# Local databases and backups
+/backend/knowflow.db
+/backend/knowflow-test.db
+/backend/.tmp-*.db
+/backend/*.db.bak
+
+# Operating-system metadata
+.DS_Store
+Thumbs.db
