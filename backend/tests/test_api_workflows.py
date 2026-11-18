@@ -137,6 +137,52 @@ def test_text_import_commits_before_ai_background_task(client, monkeypatch):
     assert seen == {"exists": True, "status": "pending"}
 
 
+def test_authenticated_browser_capture_import(client, monkeypatch):
+    async def allow_test_domain(url):
+        return None
+
+    monkeypatch.setattr(
+        "app.infrastructure.parsers.browser_capture_parser.JinaURLParser._ensure_public_url",
+        allow_test_domain,
+    )
+    headers = register_and_login(client, "browser-capture")
+    kb = create_kb(client, headers, "浏览器采集")
+
+    response = client.post(
+        "/api/v1/contents/browser-capture",
+        headers=headers,
+        json={
+            "kb_id": kb["id"],
+            "url": "https://example.com/note",
+            "title": "浏览器里看到的图文笔记",
+            "text": "这是用户在已登录浏览器中确认过的正文，包含足够的知识内容。",
+            "page_type": "image",
+            "image_urls": [],
+            "has_video": False,
+            "subtitle_text": "",
+            "captured_at": "2026-10-09T12:00:00.000Z",
+        },
+    )
+
+    assert response.status_code == 200, response.text
+    content = response.json()["data"]
+    assert content["source_type"] == "url"
+    assert content["source_url"] == "https://example.com/note"
+    assert content["title"] == "浏览器里看到的图文笔记"
+    assert content["metadata"]["parser"] == "browser_capture"
+    assert content["metadata"]["page_type"] == "image"
+
+    unauthenticated = client.post(
+        "/api/v1/contents/browser-capture",
+        json={
+            "kb_id": kb["id"],
+            "url": "https://example.com/note",
+            "text": "未登录请求不应被接受。",
+        },
+    )
+    assert unauthenticated.status_code == 401
+
+
 def test_reprocess_refreshes_server_updated_fields_before_response(client, monkeypatch):
     headers = register_and_login(client, "reprocess")
     kb = create_kb(client, headers, "重新整理")

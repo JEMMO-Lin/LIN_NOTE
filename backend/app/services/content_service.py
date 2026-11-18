@@ -43,27 +43,36 @@ class ContentService:
 
     async def import_from_url(self, url: str, kb_id: str, user_id: str) -> ContentItem:
         """从 URL 导入：通过解析器抓取并结构化"""
+        await self._ensure_kb_access(kb_id, user_id)
         parser = self.parser_factory.get_parser(url, "url")
         result = await parser.parse(url)
-        await self._ensure_kb_access(kb_id, user_id)
         return await self._save_content(kb_id, result)
 
     async def import_from_text(
         self, text: str, kb_id: str, user_id: str, title: Optional[str] = None
     ) -> ContentItem:
         """从纯文本导入"""
+        await self._ensure_kb_access(kb_id, user_id)
         parser = self.parser_factory.get_parser(text, "text")
         result = await parser.parse(text, title=title)
-        await self._ensure_kb_access(kb_id, user_id)
         return await self._save_content(kb_id, result)
 
     async def import_from_image(self, image: bytes, kb_id: str, user_id: str) -> ContentItem:
         """从图片导入：走 OCR 解析"""
+        await self._ensure_kb_access(kb_id, user_id)
         parser = self.parser_factory.get_parser("", "image")
         result = await parser.parse(image)
-        await self._ensure_kb_access(kb_id, user_id)
         if not result.content.strip():
             raise ValidationError("没有从图片中识别到文字，请换一张更清晰的图片")
+        return await self._save_content(kb_id, result)
+
+    async def import_from_browser_capture(
+        self, payload: dict, kb_id: str, user_id: str
+    ) -> ContentItem:
+        """Import text/media observed in the user's authenticated browser."""
+        await self._ensure_kb_access(kb_id, user_id)
+        parser = self.parser_factory.get_parser("", "browser")
+        result = await parser.parse(payload)
         return await self._save_content(kb_id, result)
 
     async def _save_content(self, kb_id: str, parsed: ParseResult) -> ContentItem:

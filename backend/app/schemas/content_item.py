@@ -1,8 +1,8 @@
 """内容项 Schema"""
-from typing import Optional
+from typing import Literal, Optional
 import uuid
 
-from pydantic import BaseModel, Field, field_serializer
+from pydantic import BaseModel, Field, field_serializer, field_validator
 
 from app.schemas.common import TimestampMixin
 
@@ -28,6 +28,28 @@ class ContentImportFromImage(BaseModel):
     """从图片导入（OCR）"""
 
     kb_id: str
+
+
+class ContentImportFromBrowser(BaseModel):
+    """Import content explicitly collected in the user's logged-in browser."""
+
+    kb_id: str
+    url: str = Field(min_length=1, max_length=500)
+    title: Optional[str] = Field(None, max_length=500)
+    text: str = Field("", max_length=200_000)
+    page_type: Literal["article", "image", "video"] = "article"
+    image_urls: list[str] = Field(default_factory=list, max_length=10)
+    has_video: bool = False
+    subtitle_text: str = Field("", max_length=200_000)
+    video_duration: Optional[float] = Field(None, ge=0, le=86_400)
+    captured_at: Optional[str] = Field(None, max_length=100)
+
+    @field_validator("image_urls")
+    @classmethod
+    def validate_image_urls(cls, value: list[str]) -> list[str]:
+        if any(len(url) > 2_000 for url in value):
+            raise ValueError("图片地址过长")
+        return value
 
 
 class ContentOut(TimestampMixin):

@@ -6,6 +6,7 @@
 from typing import Optional
 
 from app.core.exceptions import ValidationError
+from app.infrastructure.parsers.browser_capture_parser import BrowserCaptureParser
 from app.infrastructure.parsers.jina_url_parser import JinaURLParser
 from app.infrastructure.parsers.ocr_parser import OCRParser
 from app.infrastructure.parsers.text_parser import TextParser
@@ -17,6 +18,7 @@ class ParserFactory:
 
     def __init__(self):
         self._parsers: list[IContentParser] = [
+            BrowserCaptureParser(),
             JinaURLParser(),
             TextParser(),
             OCRParser(),

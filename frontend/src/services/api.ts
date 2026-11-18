@@ -19,6 +19,7 @@ import type {
   TemplateField,
   User,
 } from "@/types";
+import type { BrowserCapturePayload } from "@/utils/browser-capture";
 
 const API_BASE =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
@@ -190,6 +191,23 @@ export const contentApi = {
       { method: "POST", body: form },
     );
   },
+
+  importBrowserCapture: (kbId: string, payload: BrowserCapturePayload) =>
+    request<ApiResponse<ContentItem>>("/contents/browser-capture", {
+      method: "POST",
+      body: JSON.stringify({
+        kb_id: kbId,
+        url: payload.url,
+        title: payload.title || undefined,
+        text: payload.text,
+        page_type: payload.page_type,
+        image_urls: payload.image_urls,
+        has_video: payload.has_video,
+        subtitle_text: payload.subtitle_text,
+        video_duration: payload.video_duration,
+        captured_at: payload.captured_at,
+      }),
+    }),
 
   process: (
     id: string,

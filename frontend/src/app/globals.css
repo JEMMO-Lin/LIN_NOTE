@@ -2457,6 +2457,15 @@ a {
   margin-top: 26px;
 }
 
+.import-feedback {
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+.import-feedback .ant-alert-description {
+  line-height: 1.6;
+}
+
 .import-form .ant-input,
 .import-form .ant-input-affix-wrapper,
 .import-form textarea.ant-input {
@@ -2490,6 +2499,11 @@ a {
   background: var(--peach);
 }
 
+.mode-browser {
+  color: var(--lilac-strong);
+  background: var(--lilac);
+}
+
 @keyframes mode-pop {
   from {
     opacity: 0;
@@ -2519,8 +2533,60 @@ a {
   background: #f7f9f7;
 }
 
+.import-mode-panel .ant-upload-list {
+  max-height: 220px;
+  overflow-y: auto;
+  text-align: left;
+}
+
 .import-mode-panel .ant-upload-drag-icon .anticon {
   color: #78917e;
+}
+
+.browser-capture-install {
+  text-align: left;
+}
+
+.browser-capture-install > h4,
+.browser-capture-install > p {
+  text-align: center;
+}
+
+.bookmarklet-install-card {
+  display: grid;
+  margin: 22px 0 16px;
+  padding: 20px;
+  gap: 14px;
+  border: 1px solid #e4dfea;
+  border-radius: 17px;
+  background: #faf8fc;
+}
+
+.bookmarklet-install-card ol {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.bookmarklet-button {
+  display: inline-flex;
+  min-height: 44px;
+  padding: 0 18px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 12px;
+  color: #fff;
+  background: var(--lilac-strong);
+  box-shadow: 0 8px 18px rgba(137, 120, 155, 0.22);
+  cursor: grab;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.bookmarklet-button:active {
+  cursor: grabbing;
 }
 
 .drawer-footer {
@@ -2540,6 +2606,136 @@ a {
 
 .ai-hint .anticon {
   color: #d0a64d;
+}
+
+/* Browser capture review */
+
+.capture-page {
+  min-height: 100vh;
+  padding: 42px 24px 72px;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(225, 237, 227, 0.9), transparent 34%),
+    radial-gradient(circle at 90% 80%, rgba(236, 231, 243, 0.75), transparent 32%),
+    var(--canvas);
+}
+
+.capture-page-centered {
+  display: grid;
+  place-items: center;
+}
+
+.capture-shell {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+}
+
+.capture-brand {
+  display: flex;
+  margin-bottom: 28px;
+  align-items: center;
+  gap: 13px;
+}
+
+.capture-brand > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.capture-brand strong {
+  font-size: 18px;
+}
+
+.capture-brand span:last-child {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.capture-grid {
+  display: grid;
+  margin-top: 18px;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  align-items: start;
+  gap: 20px;
+}
+
+.capture-preview-card,
+.capture-action-card,
+.capture-empty-card,
+.capture-success-card {
+  border-color: rgba(226, 233, 227, 0.95);
+  box-shadow: 0 18px 55px rgba(45, 65, 52, 0.08);
+}
+
+.capture-preview-heading {
+  display: flex;
+  margin-bottom: 18px;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.capture-preview-heading h3.ant-typography {
+  margin: 0;
+}
+
+.capture-action-card {
+  position: sticky;
+  top: 24px;
+}
+
+.capture-action-card .ant-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.capture-action-card h4.ant-typography {
+  margin: 0;
+}
+
+.capture-field {
+  display: flex;
+  margin-top: 18px;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.capture-field > span {
+  color: #4d5c53;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.capture-action-card .capture-field {
+  margin-top: 0;
+}
+
+.capture-empty-card,
+.capture-success-card {
+  width: min(680px, 100%);
+  margin: 56px auto 0;
+  padding: 28px;
+  text-align: center;
+}
+
+.capture-empty-icon,
+.capture-success-icon {
+  margin-bottom: 12px;
+  color: var(--lilac-strong);
+  font-size: 38px;
+}
+
+.capture-success-icon {
+  color: var(--sage-strong);
+}
+
+.capture-manual-input {
+  display: flex;
+  margin-top: 24px;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
 }
 
 .detail-drawer .ant-drawer-header {
@@ -3015,9 +3211,31 @@ a {
   .search-heading {
     padding-top: 4px;
   }
+
+  .capture-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .capture-action-card {
+    position: static;
+  }
 }
 
 @media (max-width: 600px) {
+  .capture-page {
+    padding: 24px 14px 48px;
+  }
+
+  .capture-preview-heading {
+    flex-direction: column;
+  }
+
+  .capture-empty-card,
+  .capture-success-card {
+    margin-top: 24px;
+    padding: 8px;
+  }
+
   .auth-form-wrap {
     padding: 22px;
     align-items: start;

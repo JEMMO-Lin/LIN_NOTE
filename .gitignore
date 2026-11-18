@@ -39,3 +39,6 @@
 # Operating-system metadata
 .DS_Store
 Thumbs.db
+
+# Local learning plans and checklists
+/学习规划/

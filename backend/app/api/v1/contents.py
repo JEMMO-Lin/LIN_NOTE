@@ -13,6 +13,7 @@ from app.infrastructure.llm.router import get_llm_router
 from app.infrastructure.parsers.factory import get_parser_factory
 from app.schemas.common import DataResponse, PaginatedResponse
 from app.schemas.content_item import (
+    ContentImportFromBrowser,
     ContentImportFromText,
     ContentImportFromURL,
     ContentOut,
@@ -119,6 +120,29 @@ async def import_from_image(
     await db.commit()
     await db.refresh(item)
     background_tasks.add_task(process_content_with_ai, item.id, "medium", None, job_id)
+    return DataResponse(data=ContentOut.model_validate(item))
+
+
+@router.post("/browser-capture", response_model=DataResponse[ContentOut])
+async def import_from_browser_capture(
+    payload: ContentImportFromBrowser,
+    background_tasks: BackgroundTasks,
+    user_id: str = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_db),
+    llm_router: ILLMRouter = Depends(get_llm_router),
+):
+    """Receive user-reviewed content from the browser capture helper."""
+    service = _get_content_service(db, llm_router)
+    capture = payload.model_dump(exclude={"kb_id"})
+    item = await service.import_from_browser_capture(
+        capture, payload.kb_id, user_id
+    )
+    job_id = _prepare_processing(item)
+    await db.commit()
+    await db.refresh(item)
+    background_tasks.add_task(
+        process_content_with_ai, item.id, "medium", None, job_id
+    )
     return DataResponse(data=ContentOut.model_validate(item))
 
 
